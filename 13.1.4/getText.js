@@ -6,10 +6,11 @@ function getText(url, callback) {
   request.on("response", (response) => {
     let httpStatus = response.statusCode;
     response.setEncoding("utf-8");
-    let body = "";
+    let body = "body:";
 
     response.on("data", (chunk) => {
-      body + chunk;
+      //   console.log("chunk=", chunk);
+      body += chunk;
     });
 
     response.on("end", () => {
@@ -25,3 +26,7 @@ function getText(url, callback) {
     callback(err, null);
   });
 }
+
+getText("https://www.google.com", (err, text) => {
+  console.log(err, text);
+});
