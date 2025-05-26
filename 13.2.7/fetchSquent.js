@@ -33,7 +33,7 @@ function promiseSequence(inputs, promiseMaker) {
       return promiseMaker(input)
         .then((output) => {
           console.log(outputs, output);
-          outputs.concat(output);
+          return outputs.concat(output);
         })
         .then(handleNextInput);
     }
