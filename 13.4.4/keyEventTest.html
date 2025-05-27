@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsyncQueue KeyEvent Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #output {
+      border: 1px solid #ccc;
+      padding: 10px;
+      min-height: 200px;
+      margin-top: 20px;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 8px 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AsyncQueue KeyEvent Test</h1>
+  <p>按下任意键测试 handleKeys 函数，或使用下面的按钮模拟按键事件</p>
+  
+  <div>
+    <button id="simulateA">模拟按键 'a'</button>
+    <button id="simulateB">模拟按键 'b'</button>
+    <button id="simulateEnter">模拟按键 'Enter'</button>
+    <button id="stopTest">停止测试</button>
+  </div>
+  
+  <div id="output">
+    <p>按键记录将显示在这里...</p>
+  </div>
+
+  <script src="AsyncQueue.js"></script>
+  <script src="keyEventTest.js"></script>
+</body>
+</html>
