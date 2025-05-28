@@ -1,0 +1,46 @@
+console.log("process.argv: ", process.argv);
+console.log("process.arch: ", process.arch);
+console.log("process.env: ", process.env);
+console.log("process.execPath: ", process.execPath);
+console.log("process.exitCode: ", process.exitCode);
+console.log("process.pid: ", process.pid);
+console.log("process.ppid: ", process.ppid);
+console.log("process.platform: ", process.platform);
+console.log("process.title: ", process.title);
+console.log("process.version: ", process.version);
+console.log("process.versions: ", process.versions);
+
+console.log("process.cwd(): ", process.cwd());
+console.log("process.chdir(): ", process.chdir("../16.6"));
+console.log("process.cpuUsage(): ", process.cpuUsage());
+// console.log("process.exit(): ", process.exit());
+console.log("process.getuid(): ", process.getuid());
+console.log("process.hrtime.bigint(): ", process.hrtime.bigint());
+// console.log("process.kill(): ", process.kill());
+console.log("process.memoryUsage(): ", process.memoryUsage());
+// console.log("process.nextTick(): ", process.nextTick());
+console.log("process.umask(): ", process.umask());
+console.log("process.uptime(): ", process.uptime());
+console.log("\n-----os info-------\n");
+
+const os = require("os");
+
+console.log("os.arch(): ", os.arch());
+console.log("os.constants: ", os.constants);
+console.log("os.cpus(): ", os.cpus());
+console.log("os.endianness(): ", os.endianness());
+console.log("os.EOL: ", os.EOL);
+console.log("os.freemem(): ", os.freemem());
+console.log("os.getPriority(): ", os.getPriority());
+console.log("os.homedir(): ", os.homedir());
+console.log("os.hostname(): ", os.hostname());
+console.log("os.loadavg(): ", os.loadavg());
+console.log("os.networkInterfaces(): ", os.networkInterfaces());
+console.log("os.platform(): ", os.platform());
+console.log("os.release(): ", os.release());
+console.log("os.setPriority(): ", os.setPriority(0));
+console.log("os.tmpdir(): ", os.tmpdir());
+console.log("os.totalmem(): ", os.totalmem());
+console.log("os.type(): ", os.type());
+console.log("os.uptime(): ", os.uptime());
+console.log("os.userInfo(): ", os.userInfo());
