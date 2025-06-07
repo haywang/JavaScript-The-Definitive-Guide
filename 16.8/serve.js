@@ -25,7 +25,7 @@ function serve(rootDirectory, port) {
       }
 
       response.write("\r\n");
-      response.pipe(response);
+      request.pipe(response);
     } else {
       let filename = endpoint.substring(1);
       filename = filename.replace(/\.\.\//g, "");
