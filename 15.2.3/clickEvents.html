@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click Event Order Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .box {
+        padding: 20px;
+        border: 2px solid #333;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      #outer {
+        background-color: #f0f0f0;
+      }
+
+      #middle {
+        background-color: #e0e0e0;
+        margin: 20px;
+      }
+
+      #inner {
+        background-color: #d0d0d0;
+        margin: 20px;
+      }
+
+      #log {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 200px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Click Event Order Demo</h1>
+    <p>点击下面的嵌套元素，观察不同类型的事件处理函数执行顺序</p>
+
+    <div class="container">
+      <div id="outer" class="box">
+        外层元素
+        <div id="middle" class="box">
+          中层元素
+          <div id="inner" class="box">内层元素</div>
+        </div>
+      </div>
+
+      <button id="reset">清除日志</button>
+      <div id="log"></div>
+    </div>
+
+    <script>
+      // 获取元素
+      const outer = document.getElementById("outer");
+      const middle = document.getElementById("middle");
+      const inner = document.getElementById("inner");
+      const logDiv = document.getElementById("log");
+      const resetBtn = document.getElementById("reset");
+
+      // 计数器，用于记录事件触发顺序
+      let counter = 1;
+
+      // 日志函数
+      function log(message) {
+        const entry = document.createElement("div");
+        entry.textContent = `${counter++}. ${message}`;
+        logDiv.appendChild(entry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+        console.log(`${counter - 1}. ${message}`);
+      }
+
+      // 重置日志
+      resetBtn.addEventListener("click", () => {
+        logDiv.innerHTML = "";
+        counter = 1;
+        console.clear();
+        log("日志已清除");
+      });
+
+      // 1. 使用 addEventListener 添加捕获阶段事件处理函数
+      outer.addEventListener(
+        "click",
+        function (e) {
+          log("外层元素 捕获阶段 (addEventListener, capture: true)");
+        },
+        true
+      );
+
+      middle.addEventListener(
+        "click",
+        function (e) {
+          log("中层元素 捕获阶段 (addEventListener, capture: true)");
+        },
+        true
+      );
+
+      inner.addEventListener(
+        "click",
+        function (e) {
+          log("内层元素 捕获阶段 (addEventListener, capture: true)");
+        },
+        true
+      );
+
+      // 2. 使用 addEventListener 添加冒泡阶段事件处理函数
+      outer.addEventListener(
+        "click",
+        function (e) {
+          log("外层元素 冒泡阶段 (addEventListener, capture: false)");
+        },
+        false
+      );
+
+      middle.addEventListener(
+        "click",
+        function (e) {
+          log("中层元素 冒泡阶段 (addEventListener, capture: false)");
+        },
+        false
+      );
+
+      inner.addEventListener(
+        "click",
+        function (e) {
+          log("内层元素 冒泡阶段 (addEventListener, capture: false)");
+        },
+        false
+      );
+
+      // 3. 使用 onclick 属性添加事件处理函数（默认在冒泡阶段）
+      outer.onclick = function (e) {
+        log("外层元素 (onclick 属性)");
+      };
+
+      middle.onclick = function (e) {
+        log("中层元素 (onclick 属性)");
+      };
+
+      inner.onclick = function (e) {
+        log("内层元素 (onclick 属性)");
+      };
+
+      // 4. 添加一个阻止冒泡的处理函数
+      document.getElementById("middle").addEventListener("click", function (e) {
+        log("中层元素 阻止冒泡 (stopPropagation)");
+        // 取消下面这行注释可以阻止事件冒泡
+        e.stopPropagation();
+      });
+
+      // 5. 添加一个阻止默认行为的处理函数
+      document.getElementById("inner").addEventListener("click", function (e) {
+        log("内层元素 阻止默认行为 (preventDefault)");
+        // 取消下面这行注释可以阻止默认行为
+        e.preventDefault();
+      });
+
+      // 6. 使用 once 选项添加只执行一次的事件处理函数
+      inner.addEventListener(
+        "click",
+        function (e) {
+          log("内层元素 只执行一次 (addEventListener, once: true)");
+        },
+        { once: true }
+      );
+
+      // 初始日志
+      log("页面加载完成，点击嵌套元素查看事件执行顺序");
+    </script>
+  </body>
+</html>
