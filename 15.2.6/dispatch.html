@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dispatch Event</title>
+  </head>
+  <body>
+    <script>
+      document.dispatchEvent(new CustomEvent("busy", { detail: true }));
+      fetch("https://jsonplaceholder.typicode.com/todos/1")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("data =", data);
+        })
+        .catch((e) => console.log("catch e = ", e))
+        .finally((data) => {
+          document.dispatchEvent(new CustomEvent("busy", { detail: false }));
+          console.log("finally data = ", data);
+        });
+      document.addEventListener("busy", (e) => {
+        if (e.detail) {
+          console.log("showSpinner");
+        } else {
+          console.log("hideSpinner");
+        }
+      });
+    </script>
+  </body>
+</html>
