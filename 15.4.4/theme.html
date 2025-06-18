@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme</title>
+  </head>
+  <body>
+    <script>
+      function toggleTheme() {
+        let lightTheme = document.querySelector("#light-theme");
+        let darkTheme = document.querySelector("#dark-theme");
+        if (darkTheme.disabled) {
+          lightTheme.disabled = true;
+          darkTheme.disabled = false;
+        } else {
+          lightTheme.disabled = false;
+          darkTheme.disabled = true;
+        }
+      }
+    </script>
+  </body>
+</html>
