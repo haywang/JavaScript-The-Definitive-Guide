@@ -4,20 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theme</title>
+    <link rel="stylesheet" id="light-theme" href="light.css" disabled />
+    <link rel="stylesheet" id="dark-theme" href="dark.css" />
+    <link id="theme" rel="stylesheet" href="themes/test.css" />
   </head>
   <body>
     <script>
-      function toggleTheme() {
-        let lightTheme = document.querySelector("#light-theme");
-        let darkTheme = document.querySelector("#dark-theme");
-        if (darkTheme.disabled) {
-          lightTheme.disabled = true;
-          darkTheme.disabled = false;
+      //   function toggleTheme() {
+      //     let lightTheme = document.querySelector("#light-theme");
+      //     let darkTheme = document.querySelector("#dark-theme");
+      //     if (darkTheme.disabled) {
+      //       lightTheme.disabled = true;
+      //       darkTheme.disabled = false;
+      //     } else {
+      //       lightTheme.disabled = false;
+      //       darkTheme.disabled = true;
+      //     }
+      //   }
+      //   toggleTheme();
+
+      function setTheme(name) {
+        let link = document.createElement("link");
+        link.id = "theme";
+        link.rel = "stylesheet";
+        link.href = `themes/${name}.css`;
+
+        let currentTheme = document.querySelector("#theme");
+        if (currentTheme) {
+          currentTheme.replaceWith(link);
         } else {
-          lightTheme.disabled = false;
-          darkTheme.disabled = true;
+          document.head.append(link);
         }
       }
+      setTheme("new");
     </script>
   </body>
 </html>
