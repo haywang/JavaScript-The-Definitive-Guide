@@ -6,7 +6,7 @@
     <title>Scroll</title>
     <style>
       p {
-        height: 1200px;
+        height: 2000px;
         width: 100%;
       }
 
@@ -32,8 +32,17 @@
       function scrollToTop() {
         let documentHeight = document.documentElement.offsetHeight;
         let viewportHeight = window.innerHeight;
-        window.scrollTo(0, documentHeight - viewportHeight);
+        // window.scrollTo(0, documentHeight - viewportHeight);
+        window.scrollTo({
+          left: 0,
+          top: documentHeight - viewportHeight,
+          behavior: "smooth",
+        });
       }
+
+      //   setInterval(() => {
+      //     scrollBy(0, 50);
+      //   }, 500);
     </script>
   </body>
 </html>
