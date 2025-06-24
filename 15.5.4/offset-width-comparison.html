@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>offsetWidth 比较：body vs documentElement</title>
+    <style>
+        /* 重置默认样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            /* 给 html 元素添加边框和内边距 */
+            border: 5px solid red;
+            padding: 10px;
+            background-color: #ffeeee;
+        }
+        
+        body {
+            /* 给 body 元素添加边框和内边距 */
+            border: 5px solid blue;
+            padding: 15px;
+            background-color: #eeeeff;
+            /* 让内容超出视口宽度 */
+            min-width: 1200px;
+        }
+        
+        .content {
+            background-color: #eeffee;
+            padding: 20px;
+            border: 2px solid green;
+            /* 让内容更宽 */
+            width: 150%;
+            height: 2000px;
+        }
+        
+        .info-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border: 2px solid #333;
+            padding: 15px;
+            max-width: 400px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .info-panel h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .info-panel .section {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-panel" id="infoPanel">
+        <h3>offsetWidth 比较</h3>
+        <div id="measurements"></div>
+        <button onclick="updateMeasurements()">刷新测量</button>
+        <button onclick="togglePanel()">隐藏/显示</button>
+    </div>
+    
+    <div class="content">
+        <h1>offsetWidth 差异演示</h1>
+        <p>这个页面演示了 document.body.offsetWidth 和 document.documentElement.offsetWidth 的区别。</p>
+        
+        <h2>主要区别：</h2>
+        <ul>
+            <li><strong>document.body.offsetWidth</strong> - 获取 &lt;body&gt; 元素的宽度（包括边框）</li>
+            <li><strong>document.documentElement.offsetWidth</strong> - 获取 &lt;html&gt; 元素的宽度（包括边框）</li>
+        </ul>
+        
+        <h2>实际应用场景：</h2>
+        <ul>
+            <li><strong>获取视口宽度</strong>：通常使用 document.documentElement.clientWidth</li>
+            <li><strong>获取页面内容宽度</strong>：可能需要 document.body.scrollWidth</li>
+            <li><strong>检测横向滚动</strong>：比较 scrollWidth 和 clientWidth</li>
+        </ul>
+        
+        <p>请查看右侧的信息面板，了解具体的数值差异。</p>
+        <p>尝试调整浏览器窗口大小，观察数值的变化。</p>
+    </div>
+
+    <script>
+        function updateMeasurements() {
+            const measurements = document.getElementById('measurements');
+            
+            // 获取所有相关测量值
+            const bodyOffsetWidth = document.body.offsetWidth;
+            const bodyClientWidth = document.body.clientWidth;
+            const bodyScrollWidth = document.body.scrollWidth;
+            
+            const docElementOffsetWidth = document.documentElement.offsetWidth;
+            const docElementClientWidth = document.documentElement.clientWidth;
+            const docElementScrollWidth = document.documentElement.scrollWidth;
+            
+            const windowInnerWidth = window.innerWidth;
+            const windowOuterWidth = window.outerWidth;
+            
+            measurements.innerHTML = `
+                <div class="section">
+                    <h4>🔵 document.body 测量值</h4>
+                    <div>offsetWidth: <span class="highlight">${bodyOffsetWidth}px</span></div>
+                    <div>clientWidth: ${bodyClientWidth}px</div>
+                    <div>scrollWidth: ${bodyScrollWidth}px</div>
+                    <small>offsetWidth = 内容 + padding + border</small>
+                </div>
+                
+                <div class="section">
+                    <h4>🔴 document.documentElement 测量值</h4>
+                    <div>offsetWidth: <span class="highlight">${docElementOffsetWidth}px</span></div>
+                    <div>clientWidth: ${docElementClientWidth}px</div>
+                    <div>scrollWidth: ${docElementScrollWidth}px</div>
+                    <small>通常等于视口宽度</small>
+                </div>
+                
+                <div class="section">
+                    <h4>🪟 window 测量值</h4>
+                    <div>innerWidth: ${windowInnerWidth}px</div>
+                    <div>outerWidth: ${windowOuterWidth}px</div>
+                    <small>innerWidth = 视口宽度（不含滚动条）</small>
+                </div>
+                
+                <div class="section">
+                    <h4>📊 关键差异</h4>
+                    <div>差值: ${Math.abs(bodyOffsetWidth - docElementOffsetWidth)}px</div>
+                    <div>body ${bodyOffsetWidth > docElementOffsetWidth ? '>' : '<'} documentElement</div>
+                    <small>差异来源于不同的 padding 和 border</small>
+                </div>
+                
+                <div class="section">
+                    <h4>💡 使用建议</h4>
+                    <div>• 获取视口宽度：document.documentElement.clientWidth</div>
+                    <div>• 获取页面总宽度：document.documentElement.scrollWidth</div>
+                    <div>• 检测水平滚动：scrollWidth > clientWidth</div>
+                </div>
+            `;
+        }
+        
+        function togglePanel() {
+            const panel = document.getElementById('infoPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // 页面加载时更新测量值
+        updateMeasurements();
+        
+        // 窗口大小改变时自动更新
+        window.addEventListener('resize', updateMeasurements);
+        
+        // 在控制台输出详细信息
+        console.log('=== offsetWidth 详细比较 ===');
+        console.log('document.body.offsetWidth:', document.body.offsetWidth);
+        console.log('document.documentElement.offsetWidth:', document.documentElement.offsetWidth);
+        console.log('window.innerWidth:', window.innerWidth);
+        
+        console.log('\n=== 元素层级关系 ===');
+        console.log('document.documentElement.tagName:', document.documentElement.tagName);
+        console.log('document.body.tagName:', document.body.tagName);
+        console.log('document.body.parentElement === document.documentElement:', 
+                   document.body.parentElement === document.documentElement);
+    </script>
+</body>
+</html>

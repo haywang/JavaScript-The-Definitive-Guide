@@ -7,7 +7,7 @@
     <style>
       p {
         height: 2000px;
-        width: 100%;
+        width: 1500px;
       }
 
       button {
@@ -43,6 +43,54 @@
       //   setInterval(() => {
       //     scrollBy(0, 50);
       //   }, 500);
+
+      // 比较 document.body 和 document.documentElement 的差异
+      console.log("=== document.body 属性 ===");
+      console.log("body.offsetWidth = ", document.body.offsetWidth);
+      console.log("body.offsetHeight = ", document.body.offsetHeight);
+      console.log("body.clientWidth = ", document.body.clientWidth);
+      console.log("body.clientHeight = ", document.body.clientHeight);
+      console.log("body.scrollWidth = ", document.body.scrollWidth);
+      console.log("body.scrollHeight = ", document.body.scrollHeight);
+
+      console.log("\n=== document.documentElement 属性 ===");
+      console.log(
+        "documentElement.offsetWidth = ",
+        document.documentElement.offsetWidth
+      );
+      console.log(
+        "documentElement.offsetHeight = ",
+        document.documentElement.offsetHeight
+      );
+      console.log(
+        "documentElement.clientWidth = ",
+        document.documentElement.clientWidth
+      );
+      console.log(
+        "documentElement.clientHeight = ",
+        document.documentElement.clientHeight
+      );
+      console.log(
+        "documentElement.scrollWidth = ",
+        document.documentElement.scrollWidth
+      );
+      console.log(
+        "documentElement.scrollHeight = ",
+        document.documentElement.scrollHeight
+      );
+
+      console.log("\n=== 窗口属性对比 ===");
+      console.log("window.innerWidth = ", window.innerWidth);
+      console.log("window.innerHeight = ", window.innerHeight);
+      console.log("window.outerWidth = ", window.outerWidth);
+      console.log("window.outerHeight = ", window.outerHeight);
+
+      console.log("\n=== 元素标签名 ===");
+      console.log("document.body.tagName = ", document.body.tagName);
+      console.log(
+        "document.documentElement.tagName = ",
+        document.documentElement.tagName
+      );
     </script>
   </body>
 </html>
