@@ -24,7 +24,16 @@
             this.style.transform = "translateY(10%)";
             if (!this.style.width) {
               this.style.width = "0.8em";
-              this.style.heigth = "0.8em";
+              this.style.height = "0.8em"; // 修复拼写错误：heigth -> height
+            }
+
+            // 处理初始属性值
+            if (this.hasAttribute("diameter")) {
+              this.style.width = this.getAttribute("diameter");
+              this.style.height = this.getAttribute("diameter");
+            }
+            if (this.hasAttribute("color")) {
+              this.style.backgroundColor = this.getAttribute("color");
             }
           }
 
@@ -32,7 +41,8 @@
             return ["diameter", "color"];
           }
 
-          attrubuteChangedCallback(name, oldValue, newValue) {
+          attributeChangedCallback(name, oldValue, newValue) {
+            // 修复拼写错误：attrubuteChangedCallback -> attributeChangedCallback
             switch (name) {
               case "diameter":
                 this.style.width = newValue;

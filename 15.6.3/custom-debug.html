@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义元素调试版本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .debug-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>自定义元素 inline-circle 调试</h1>
+    
+    <div class="demo-section">
+        <h2>原始问题演示</h2>
+        <p>
+            文档有一个弹珠：<inline-circle></inline-circle>。
+            HTML 解析器实例化了两个更多的弹珠：
+            <inline-circle diameter="1.2em" color="blue"></inline-circle>
+            <inline-circle diameter=".6em" color="gold"></inline-circle>。
+            现在文档包含多少个弹珠？
+        </p>
+    </div>
+
+    <div class="demo-section">
+        <h2>动态测试</h2>
+        <div class="controls">
+            <button onclick="addCircle()">添加默认圆圈</button>
+            <button onclick="addColoredCircle()">添加彩色圆圈</button>
+            <button onclick="addLargeCircle()">添加大圆圈</button>
+            <button onclick="testAttributeChange()">测试属性变化</button>
+            <button onclick="showDebugInfo()">显示调试信息</button>
+        </div>
+        <div id="dynamic-container">
+            <!-- 动态添加的圆圈会出现在这里 -->
+        </div>
+    </div>
+
+    <div id="debug-output" class="debug-info" style="display: none;">
+        <!-- 调试信息会显示在这里 -->
+    </div>
+
+    <script>
+        // 修复后的自定义元素定义
+        customElements.define(
+            "inline-circle",
+            class InlineCircle extends HTMLElement {
+                constructor() {
+                    super();
+                    console.log("InlineCircle 构造函数被调用");
+                }
+
+                connectedCallback() {
+                    console.log("connectedCallback 被调用，元素：", this);
+                    
+                    // 基本样式设置
+                    this.style.display = "inline-block";
+                    this.style.borderRadius = "50%";
+                    this.style.border = "solid black 1px";
+                    this.style.transform = "translateY(10%)";
+                    this.style.verticalAlign = "middle"; // 改善对齐
+                    
+                    // 设置默认尺寸
+                    if (!this.hasAttribute("diameter")) {
+                        this.style.width = "0.8em";
+                        this.style.height = "0.8em";
+                    }
+                    
+                    // 处理初始属性
+                    this.updateFromAttributes();
+                }
+
+                disconnectedCallback() {
+                    console.log("disconnectedCallback 被调用");
+                }
+
+                static get observedAttributes() {
+                    return ["diameter", "color"];
+                }
+
+                attributeChangedCallback(name, oldValue, newValue) {
+                    console.log(`属性变化: ${name} 从 "${oldValue}" 变为 "${newValue}"`);
+                    
+                    switch (name) {
+                        case "diameter":
+                            this.style.width = newValue;
+                            this.style.height = newValue;
+                            break;
+                        case "color":
+                            this.style.backgroundColor = newValue;
+                            break;
+                    }
+                }
+
+                updateFromAttributes() {
+                    // 处理 diameter 属性
+                    if (this.hasAttribute("diameter")) {
+                        const diameter = this.getAttribute("diameter");
+                        this.style.width = diameter;
+                        this.style.height = diameter;
+                    }
+                    
+                    // 处理 color 属性
+                    if (this.hasAttribute("color")) {
+                        const color = this.getAttribute("color");
+                        this.style.backgroundColor = color;
+                    }
+                }
+
+                // Getter 和 Setter
+                get diameter() {
+                    return this.getAttribute("diameter");
+                }
+
+                set diameter(value) {
+                    this.setAttribute("diameter", value);
+                }
+
+                get color() {
+                    return this.getAttribute("color");
+                }
+
+                set color(value) {
+                    this.setAttribute("color", value);
+                }
+
+                // 调试方法
+                getDebugInfo() {
+                    return {
+                        tagName: this.tagName,
+                        diameter: this.diameter,
+                        color: this.color,
+                        computedStyle: {
+                            width: this.style.width,
+                            height: this.style.height,
+                            backgroundColor: this.style.backgroundColor,
+                            display: this.style.display
+                        },
+                        attributes: Array.from(this.attributes).map(attr => ({
+                            name: attr.name,
+                            value: attr.value
+                        }))
+                    };
+                }
+            }
+        );
+
+        // 测试函数
+        function addCircle() {
+            const container = document.getElementById('dynamic-container');
+            const circle = document.createElement('inline-circle');
+            container.appendChild(circle);
+            container.appendChild(document.createTextNode(' '));
+        }
+
+        function addColoredCircle() {
+            const container = document.getElementById('dynamic-container');
+            const circle = document.createElement('inline-circle');
+            const colors = ['red', 'green', 'purple', 'orange', 'pink'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            circle.setAttribute('color', randomColor);
+            circle.setAttribute('diameter', '1em');
+            container.appendChild(circle);
+            container.appendChild(document.createTextNode(' '));
+        }
+
+        function addLargeCircle() {
+            const container = document.getElementById('dynamic-container');
+            const circle = document.createElement('inline-circle');
+            circle.diameter = '2em';
+            circle.color = 'navy';
+            container.appendChild(circle);
+            container.appendChild(document.createTextNode(' '));
+        }
+
+        function testAttributeChange() {
+            const circles = document.querySelectorAll('inline-circle');
+            if (circles.length > 0) {
+                const circle = circles[circles.length - 1];
+                const newColor = circle.color === 'red' ? 'blue' : 'red';
+                circle.color = newColor;
+                console.log(`改变了最后一个圆圈的颜色为: ${newColor}`);
+            }
+        }
+
+        function showDebugInfo() {
+            const debugOutput = document.getElementById('debug-output');
+            const circles = document.querySelectorAll('inline-circle');
+            
+            let debugHtml = `<h3>调试信息 (找到 ${circles.length} 个圆圈)</h3>`;
+            
+            circles.forEach((circle, index) => {
+                const info = circle.getDebugInfo();
+                debugHtml += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;">
+                        <strong>圆圈 #${index + 1}:</strong><br>
+                        直径: ${info.diameter || '默认'}<br>
+                        颜色: ${info.color || '默认'}<br>
+                        样式宽度: ${info.computedStyle.width}<br>
+                        样式高度: ${info.computedStyle.height}<br>
+                        背景色: ${info.computedStyle.backgroundColor || '无'}<br>
+                        属性: ${JSON.stringify(info.attributes)}
+                    </div>
+                `;
+            });
+            
+            debugOutput.innerHTML = debugHtml;
+            debugOutput.style.display = 'block';
+        }
+
+        // 页面加载完成后的初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('页面加载完成，开始检查自定义元素...');
+            
+            setTimeout(() => {
+                const circles = document.querySelectorAll('inline-circle');
+                console.log(`找到 ${circles.length} 个 inline-circle 元素`);
+                
+                circles.forEach((circle, index) => {
+                    console.log(`圆圈 #${index + 1}:`, circle.getDebugInfo());
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
